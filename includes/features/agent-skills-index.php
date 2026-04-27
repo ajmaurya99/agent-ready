@@ -127,27 +127,27 @@ function build_skill_md( string $name, array $def ): string {
 	$description = $def['description'];
 	$endpoint    = $def['endpoint'];
 
-	return <<<MD
----
-name: {$name}
-type: {$type}
-description: {$description}
----
-
-# {$name}
-
-{$description}
-
-## How to use
-
-Issue a GET request to:
-
-```
-{$endpoint}
-```
-
-The endpoint follows the WordPress REST API conventions. Fetch the full schema at `/?format=openapi`.
-MD;
+	// Byte-for-byte equivalent to the previous heredoc; rewritten as a
+	// concatenated string so the WP.org PluginCheck heredoc rule is happy.
+	return "---\n"
+		. "name: {$name}\n"
+		. "type: {$type}\n"
+		. "description: {$description}\n"
+		. "---\n"
+		. "\n"
+		. "# {$name}\n"
+		. "\n"
+		. "{$description}\n"
+		. "\n"
+		. "## How to use\n"
+		. "\n"
+		. "Issue a GET request to:\n"
+		. "\n"
+		. "```\n"
+		. "{$endpoint}\n"
+		. "```\n"
+		. "\n"
+		. 'The endpoint follows the WordPress REST API conventions. Fetch the full schema at `/?format=openapi`.';
 }
 
 /**
