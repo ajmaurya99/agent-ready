@@ -5,10 +5,10 @@
  * Returns a clean Markdown version of any page when an agent requests it via
  * `Accept: text/markdown`. Browsers (which send `text/html`) are unaffected.
  *
- * @package AgentReady
+ * @package Crawlbridge
  */
 
-namespace AgentReady;
+namespace Crawlbridge;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

@@ -7,10 +7,10 @@
  *
  * @see https://webmachinelearning.github.io/webmcp/
  *
- * @package AgentReady
+ * @package Crawlbridge
  */
 
-namespace AgentReady;
+namespace Crawlbridge;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -28,7 +28,7 @@ function enqueue_webmcp_script(): void {
 		return;
 	}
 
-	$asset_path = AGENT_READY_DIR . 'assets/js/webmcp-tools.js';
+	$asset_path = CRAWLBRIDGE_DIR . 'assets/js/webmcp-tools.js';
 	if ( ! file_exists( $asset_path ) ) {
 		return;
 	}
@@ -36,16 +36,16 @@ function enqueue_webmcp_script(): void {
 	$version = filemtime( $asset_path );
 
 	wp_enqueue_script(
-		'agent-ready-webmcp',
-		AGENT_READY_URL . 'assets/js/webmcp-tools.js',
+		'crawlbridge-webmcp',
+		CRAWLBRIDGE_URL . 'assets/js/webmcp-tools.js',
 		array(),
 		$version,
 		true
 	);
 
 	wp_localize_script(
-		'agent-ready-webmcp',
-		'AgentReadyWebMCP',
+		'crawlbridge-webmcp',
+		'CrawlbridgeWebMCP',
 		array(
 			'apiUrl' => rest_url( '/' ),
 		)

@@ -10,10 +10,10 @@
  * @see https://github.com/cloudflare/agent-skills-discovery-rfc
  * @see https://agentskills.io/
  *
- * @package AgentReady
+ * @package Crawlbridge
  */
 
-namespace AgentReady;
+namespace Crawlbridge;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -112,7 +112,7 @@ function get_skill_definitions(): array {
 	 *
 	 * @param array<string, array{type: string, description: string, endpoint: string}> $skills
 	 */
-	return apply_filters( 'agent_ready_skill_definitions', $skills );
+	return apply_filters( 'crawlbridge_skill_definitions', $skills );
 }
 
 /**
@@ -123,12 +123,13 @@ function get_skill_definitions(): array {
  * @return string
  */
 function build_skill_md( string $name, array $def ): string {
-	$type        = $def['type'];
-	$description = $def['description'];
-	$endpoint    = $def['endpoint'];
+	// Skill values come from a filter (`crawlbridge_skill_definitions`), so
+	// escape them when interpolating into the markdown template.
+	$name        = esc_html( $name );
+	$type        = esc_html( $def['type'] );
+	$description = esc_html( $def['description'] );
+	$endpoint    = esc_url( $def['endpoint'] );
 
-	// Byte-for-byte equivalent to the previous heredoc; rewritten as a
-	// concatenated string so the WP.org PluginCheck heredoc rule is happy.
 	return "---\n"
 		. "name: {$name}\n"
 		. "type: {$type}\n"
@@ -181,8 +182,9 @@ function handle_agent_skill_md_request(): void {
 
 	nocache_headers();
 	header( 'Content-Type: text/markdown; charset=utf-8' );
-	// Plain-text Markdown body served as text/markdown — built from a hardcoded
-	// template and sanitized skill data, never user input.
+	// Plain-text Markdown served as text/markdown. Body is built from a
+	// hardcoded template plus values pre-escaped via esc_html/esc_url in
+	// build_skill_md().
 	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo build_skill_md( $m[1], $skills[ $m[1] ] );
 	exit;

@@ -7,10 +7,10 @@
  * every frontend response so agents can discover the catalog without having
  * to know about /.well-known/.
  *
- * @package AgentReady
+ * @package Crawlbridge
  */
 
-namespace AgentReady;
+namespace Crawlbridge;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -71,7 +71,7 @@ function handle_api_catalog_request(): void {
 	 *
 	 * @param array $linkset
 	 */
-	$linkset = apply_filters( 'agent_ready_api_catalog_linkset', $linkset );
+	$linkset = apply_filters( 'crawlbridge_api_catalog_linkset', $linkset );
 
 	echo wp_json_encode( array( 'linkset' => $linkset ), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES );
 	exit;

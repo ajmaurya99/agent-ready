@@ -3,19 +3,19 @@
  * Feature: llms.txt — a curated, LLM-readable index of the site.
  *
  * Serves /llms.txt with site identity, a Discovery section auto-linking every
- * other agent-ready endpoint that's currently enabled, top-level pages, and
+ * other crawlbridge endpoint that's currently enabled, top-level pages, and
  * recent posts. Format follows https://llmstxt.org/.
  *
- * @package AgentReady
+ * @package Crawlbridge
  */
 
-namespace AgentReady;
+namespace Crawlbridge;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const LLMS_TXT_CACHE_KEY = 'agent_ready_llms_txt_cache';
+const LLMS_TXT_CACHE_KEY = 'crawlbridge_llms_txt_cache';
 
 add_action( 'init', __NAMESPACE__ . '\\handle_llms_txt_request' );
 
@@ -30,7 +30,7 @@ add_action( 'untrashed_post', __NAMESPACE__ . '\\flush_llms_txt_cache' );
 add_action( 'update_option_blogname', __NAMESPACE__ . '\\flush_llms_txt_cache' );
 add_action( 'update_option_blogdescription', __NAMESPACE__ . '\\flush_llms_txt_cache' );
 
-// Invalidate when any Agent-Ready toggle changes — affects the Discovery section.
+// Invalidate when any Crawlbridge toggle changes — affects the Discovery section.
 add_action( 'updated_option', __NAMESPACE__ . '\\maybe_flush_llms_txt_on_setting_change' );
 
 /**
@@ -43,7 +43,7 @@ function flush_llms_txt_cache(): void {
 }
 
 /**
- * Flush the cache when an `agent_ready_*_enabled` option is updated. The
+ * Flush the cache when an `crawlbridge_*_enabled` option is updated. The
  * Discovery section auto-includes only enabled features, so a toggle change
  * means the cached body is stale.
  *
@@ -51,7 +51,7 @@ function flush_llms_txt_cache(): void {
  * @return void
  */
 function maybe_flush_llms_txt_on_setting_change( string $option ): void {
-	if ( strpos( $option, 'agent_ready_' ) === 0 ) {
+	if ( strpos( $option, 'crawlbridge_' ) === 0 ) {
 		flush_llms_txt_cache();
 	}
 }
@@ -60,7 +60,7 @@ function maybe_flush_llms_txt_on_setting_change( string $option ): void {
  * Serve /llms.txt at the root or any multisite subsite path.
  *
  * Cached for one hour in a transient. Invalidates automatically on post/page
- * changes, site name/description changes, and Agent-Ready setting toggles.
+ * changes, site name/description changes, and Crawlbridge setting toggles.
  *
  * @return void
  */
@@ -83,7 +83,9 @@ function handle_llms_txt_request(): void {
 
 	$cached = get_transient( LLMS_TXT_CACHE_KEY );
 	if ( is_string( $cached ) && $cached !== '' ) {
-		// Plain-text Markdown body served as text/markdown.
+		// Plain-text Markdown served as text/markdown. Body is built from a
+		// hardcoded template plus values pre-escaped via esc_html/esc_url in
+		// build_llms_txt(); the cache stores that already-escaped string.
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $cached;
 		exit;
@@ -92,7 +94,9 @@ function handle_llms_txt_request(): void {
 	$body = build_llms_txt();
 	set_transient( LLMS_TXT_CACHE_KEY, $body, HOUR_IN_SECONDS );
 
-	// Plain-text Markdown body served as text/markdown.
+	// Plain-text Markdown served as text/markdown. Body is built from a
+	// hardcoded template plus values pre-escaped via esc_html/esc_url in
+	// build_llms_txt().
 	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo $body;
 	exit;
@@ -104,8 +108,8 @@ function handle_llms_txt_request(): void {
  * @return string
  */
 function build_llms_txt(): string {
-	$name        = get_bloginfo( 'name' );
-	$description = get_bloginfo( 'description' );
+	$name        = esc_html( get_bloginfo( 'name' ) );
+	$description = esc_html( get_bloginfo( 'description' ) );
 
 	$out = "# {$name}\n\n";
 	if ( $description !== '' ) {
@@ -116,19 +120,19 @@ function build_llms_txt(): string {
 	// Discovery endpoints — only list features that are currently enabled.
 	$discovery = array();
 	if ( is_feature_enabled( 'api_catalog' ) ) {
-		$discovery[] = '[API Catalog](' . home_url( '/.well-known/api-catalog' )
+		$discovery[] = '[API Catalog](' . esc_url( home_url( '/.well-known/api-catalog' ) )
 			. '): RFC 9727 link set advertising REST endpoints, documentation, and health.';
 	}
 	if ( is_feature_enabled( 'openapi' ) ) {
-		$discovery[] = '[OpenAPI Spec](' . home_url( '/?format=openapi' )
+		$discovery[] = '[OpenAPI Spec](' . esc_url( home_url( '/?format=openapi' ) )
 			. '): OpenAPI 3.0.3 specification of every REST route on this site.';
 	}
 	if ( is_feature_enabled( 'agent_skills_index' ) ) {
-		$discovery[] = '[Agent Skills Index](' . home_url( '/.well-known/agent-skills/index.json' )
+		$discovery[] = '[Agent Skills Index](' . esc_url( home_url( '/.well-known/agent-skills/index.json' ) )
 			. '): skills agents can use, each with a verifiable SKILL.md artifact.';
 	}
 	if ( is_feature_enabled( 'mcp_server_card' ) ) {
-		$discovery[] = '[MCP Server Card](' . home_url( '/.well-known/mcp/server-card.json' )
+		$discovery[] = '[MCP Server Card](' . esc_url( home_url( '/.well-known/mcp/server-card.json' ) )
 			. '): SEP-1649 server descriptor.';
 	}
 
@@ -188,7 +192,7 @@ function build_llms_txt(): string {
 	 *
 	 * @param string $out The Markdown body about to be served.
 	 */
-	return (string) apply_filters( 'agent_ready_llms_txt_content', $out );
+	return (string) apply_filters( 'crawlbridge_llms_txt_content', $out );
 }
 
 /**
@@ -199,14 +203,15 @@ function build_llms_txt(): string {
  * @return string
  */
 function format_llms_txt_entry( \WP_Post $p, bool $with_date = false ): string {
-	$title   = get_the_title( $p );
-	$url     = get_permalink( $p );
+	$title   = esc_html( get_the_title( $p ) );
+	$url     = esc_url( get_permalink( $p ) );
 	$excerpt = trim( wp_strip_all_tags( get_the_excerpt( $p ) ) );
 	$excerpt = preg_replace( '/\s*\[(\.\.\.|…)\]\s*$/u', '', $excerpt );
+	$excerpt = esc_html( $excerpt );
 
 	$line = "[{$title}]({$url})";
 	if ( $with_date ) {
-		$line .= ' (' . get_the_date( 'Y-m-d', $p ) . ')';
+		$line .= ' (' . esc_html( get_the_date( 'Y-m-d', $p ) ) . ')';
 	}
 	if ( $excerpt !== '' ) {
 		$line .= ': ' . $excerpt;

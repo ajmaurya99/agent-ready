@@ -9,10 +9,10 @@
  * Auto-suppresses when an SEO plugin is active (see active_seo_plugin())
  * to prevent duplicate structured-data warnings.
  *
- * @package AgentReady
+ * @package Crawlbridge
  */
 
-namespace AgentReady;
+namespace Crawlbridge;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -348,7 +348,7 @@ function output_json_ld_schema(): void {
 	 *
 	 * @param array $graph
 	 */
-	$schema['@graph'] = apply_filters( 'agent_ready_json_ld_graph', $schema['@graph'] );
+	$schema['@graph'] = apply_filters( 'crawlbridge_json_ld_graph', $schema['@graph'] );
 
 	echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_SLASHES ) . '</script>' . "\n";
 }

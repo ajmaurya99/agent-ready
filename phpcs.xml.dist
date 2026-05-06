@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="Agent-Ready">
-    <description>Coding standards for the Agent-Ready plugin.</description>
+<ruleset name="Crawlbridge">
+    <description>Coding standards for the Crawlbridge plugin.</description>
 
     <!-- Files / dirs to scan -->
     <file>.</file>
@@ -23,7 +23,7 @@
     </rule>
 
     <!-- Plugin text domain -->
-    <config name="text_domain" value="agent-ready"/>
+    <config name="text_domain" value="crawlbridge"/>
 
     <!-- Support PHP 7.4+ -->
     <config name="testVersion" value="7.4-"/>

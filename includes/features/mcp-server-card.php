@@ -8,10 +8,10 @@
  *
  * @see https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2127
  *
- * @package AgentReady
+ * @package Crawlbridge
  */
 
-namespace AgentReady;
+namespace Crawlbridge;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -70,7 +70,7 @@ function handle_mcp_server_card_request(): void {
 	 *
 	 * @param array $server_card
 	 */
-	$server_card = apply_filters( 'agent_ready_mcp_server_card', $server_card );
+	$server_card = apply_filters( 'crawlbridge_mcp_server_card', $server_card );
 
 	echo wp_json_encode( $server_card, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES );
 	exit;

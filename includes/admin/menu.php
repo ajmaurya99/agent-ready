@@ -1,11 +1,11 @@
 <?php
 /**
- * Admin: register the settings page under Settings → Agent-Ready.
+ * Admin: register the settings page under Settings → Crawlbridge.
  *
- * @package AgentReady
+ * @package Crawlbridge
  */
 
-namespace AgentReady;
+namespace Crawlbridge;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -14,16 +14,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 add_action( 'admin_menu', __NAMESPACE__ . '\\add_admin_menu' );
 
 /**
- * Add the Agent-Ready submenu under Settings.
+ * Add the Crawlbridge submenu under Settings.
  *
  * @return void
  */
 function add_admin_menu(): void {
 	add_options_page(
-		__( 'Agent-Ready', 'agent-ready' ),
-		__( 'Agent-Ready', 'agent-ready' ),
+		__( 'Crawlbridge', 'crawlbridge' ),
+		__( 'Crawlbridge', 'crawlbridge' ),
 		required_capability(),
-		'agent-ready',
+		'crawlbridge',
 		__NAMESPACE__ . '\\render_settings_page'
 	);
 }

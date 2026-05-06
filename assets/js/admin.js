@@ -1,20 +1,20 @@
 /**
- * Agent-Ready — admin settings page JS.
+ * Crawlbridge — admin settings page JS.
  *
- * Three concerns, all scoped to the Settings → Agent-Ready screen:
+ * Three concerns, all scoped to the Settings → Crawlbridge screen:
  *   1. Smooth-scroll the in-page Read More links to their Detail anchors.
  *   2. Move the WordPress "Settings saved." notice from above the score card
  *      to right below the Save Changes button.
  *   3. Wire up the per-test-block copy buttons.
  *
- * Localized strings (e.g. "Copied!") come in via window.AgentReadyAdmin
+ * Localized strings (e.g. "Copied!") come in via window.CrawlbridgeAdmin
  * which is set by wp_localize_script() in includes/admin/enqueue.php.
  */
 
 (function () {
     'use strict';
 
-    var i18n = (window.AgentReadyAdmin && window.AgentReadyAdmin.i18n) || {};
+    var i18n = (window.CrawlbridgeAdmin && window.CrawlbridgeAdmin.i18n) || {};
 
     // --- Notice relocation + auto-dismiss ---------------------------------
     //
@@ -52,7 +52,7 @@
     // --- Read More smooth scroll + copy buttons ----------------------------
     document.addEventListener('DOMContentLoaded', function () {
         // Smooth-scroll the in-page Read More links instead of jumping.
-        document.querySelectorAll('.agent-ready-read-more').forEach(function (link) {
+        document.querySelectorAll('.crawlbridge-read-more').forEach(function (link) {
             link.addEventListener('click', function (e) {
                 var target = document.querySelector(this.getAttribute('href'));
                 if (target) {
@@ -72,10 +72,10 @@
         var liveRegion = document.createElement('div');
         liveRegion.setAttribute('role', 'status');
         liveRegion.setAttribute('aria-live', 'polite');
-        liveRegion.className = 'agent-ready-screen-reader-text';
+        liveRegion.className = 'crawlbridge-screen-reader-text';
         document.body.appendChild(liveRegion);
 
-        document.querySelectorAll('.agent-ready-copy-btn').forEach(function (btn) {
+        document.querySelectorAll('.crawlbridge-copy-btn').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 var targetId = this.getAttribute('data-target');
                 var codeEl = document.getElementById(targetId);

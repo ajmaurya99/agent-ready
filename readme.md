@@ -1,4 +1,4 @@
-=== Agent-Ready ===
+=== Crawlbridge ===
 Contributors:      ajmaurya
 Tags:              ai, mcp, openapi, structured-data, llms-txt
 Requires at least: 5.5
@@ -12,16 +12,16 @@ Make your WordPress site legible to AI agents — Markdown negotiation, JSON-LD,
 
 == Description ==
 
-**Agent-Ready** is a thin compatibility layer that teaches your site to speak the languages AI agents already use to discover and consume web content. It publishes machine-readable manifests at well-known URLs, serves clean Markdown when an AI requests it, and declares your AI-usage preferences — all without changing anything for human visitors.
+**Crawlbridge** is a thin compatibility layer that teaches your site to speak the languages AI agents already use to discover and consume web content. It publishes machine-readable manifests at well-known URLs, serves clean Markdown when an AI requests it, and declares your AI-usage preferences — all without changing anything for human visitors.
 
-Each capability is a separate toggle under **Settings → Agent-Ready** and ships **opt-in** (everything starts off). On first activation, a one-time **Quick Setup wizard** suggests sensible defaults based on your environment (for example, it skips JSON-LD when an SEO plugin is detected so you don't get duplicate structured data).
+Each capability is a separate toggle under **Settings → Crawlbridge** and ships **opt-in** (everything starts off). On first activation, a one-time **Quick Setup wizard** suggests sensible defaults based on your environment (for example, it skips JSON-LD when an SEO plugin is detected so you don't get duplicate structured data).
 
 = Discovery — help agents find what your site offers =
 
 * **API Catalog** (RFC 9727) — `/.well-known/api-catalog` linkset advertising your REST API, plus a `Link: rel="api-catalog"` header on every response so agents discover it from any URL.
 * **MCP Server Card** (SEP-1649 draft) — `/.well-known/mcp/server-card.json` describing the site to MCP-aware agents.
 * **Agent Skills Index** (RFC v0.2.0) — `/.well-known/agent-skills/index.json` listing six skills (search, posts, pages, media, categories, tags) plus per-skill `SKILL.md` artifacts with verifiable sha256 digests.
-* **llms.txt** (per llmstxt.org) — `/llms.txt` curated, LLM-readable index of your top pages and recent posts, with a Discovery section auto-linking every other agent-ready endpoint.
+* **llms.txt** (per llmstxt.org) — `/llms.txt` curated, LLM-readable index of your top pages and recent posts, with a Discovery section auto-linking every other crawlbridge endpoint.
 * **IndexNow** — non-blocking ping to Bing and Yandex on every post publish so search engines re-crawl within minutes.
 
 = Presentation — format content for agents =
@@ -48,32 +48,32 @@ Each capability is a separate toggle under **Settings → Agent-Ready** and ship
 
 The plugin exposes nine filter hooks for extension. Examples:
 
-`add_filter( 'agent_ready_required_capability', function () { return 'edit_posts'; } );`
+`add_filter( 'crawlbridge_required_capability', function () { return 'edit_posts'; } );`
 Delegate plugin access to a non-admin role.
 
-`add_filter( 'agent_ready_skill_definitions', function ( $skills ) { return $skills + [ 'products' => [ 'type' => 'information-retrieval', 'description' => 'WooCommerce products', 'endpoint' => rest_url( 'wc/v3/products' ) ] ]; } );`
+`add_filter( 'crawlbridge_skill_definitions', function ( $skills ) { return $skills + [ 'products' => [ 'type' => 'information-retrieval', 'description' => 'WooCommerce products', 'endpoint' => rest_url( 'wc/v3/products' ) ] ]; } );`
 Register custom skills that ship in the Agent Skills Index and are served as SKILL.md artifacts with verifiable sha256 digests.
 
-`add_filter( 'agent_ready_content_signal', function () { return 'ai-train=yes, search=yes, ai-input=yes'; } );`
+`add_filter( 'crawlbridge_content_signal', function () { return 'ai-train=yes, search=yes, ai-input=yes'; } );`
 Customize the Content-Signal directive (e.g. permit AI training).
 
-Other hooks: `agent_ready_api_catalog_linkset`, `agent_ready_mcp_server_card`, `agent_ready_json_ld_graph`, `agent_ready_openapi_spec`, `agent_ready_llms_txt_content`, `agent_ready_active_seo_plugin`. The settings page's Help tab → For Developers lists all of them with descriptions.
+Other hooks: `crawlbridge_api_catalog_linkset`, `crawlbridge_mcp_server_card`, `crawlbridge_json_ld_graph`, `crawlbridge_openapi_spec`, `crawlbridge_llms_txt_content`, `crawlbridge_active_seo_plugin`. The settings page's Help tab → For Developers lists all of them with descriptions.
 
 == Installation ==
 
 = From the WordPress plugin directory =
 
-1. In your WP admin, go to **Plugins → Add New** and search for "Agent-Ready".
+1. In your WP admin, go to **Plugins → Add New** and search for "Crawlbridge".
 2. Click **Install Now**, then **Activate**.
 3. The Quick Setup wizard runs automatically on first activation — review the recommended toggles and click **Apply**.
-4. Adjust any toggle later from **Settings → Agent-Ready**.
+4. Adjust any toggle later from **Settings → Crawlbridge**.
 
 = Manual install =
 
 1. Download the plugin zip.
-2. Upload the `agent-ready` folder to `/wp-content/plugins/`.
-3. Activate **Agent-Ready** from the **Plugins** screen.
-4. Visit **Settings → Agent-Ready** and run the wizard or configure manually.
+2. Upload the `crawlbridge` folder to `/wp-content/plugins/`.
+3. Activate **Crawlbridge** from the **Plugins** screen.
+4. Visit **Settings → Crawlbridge** and run the wizard or configure manually.
 
 = IndexNow setup (optional) =
 
@@ -99,9 +99,9 @@ Yes. Every endpoint resolves at both the root and per-subsite paths automaticall
 
 = How do I delegate plugin access to a non-admin role? =
 
-Use the `agent_ready_required_capability` filter. The plugin defaults to `manage_options` (admin-only); change it to any capability of your choice, e.g. `edit_pages` for editors:
+Use the `crawlbridge_required_capability` filter. The plugin defaults to `manage_options` (admin-only); change it to any capability of your choice, e.g. `edit_pages` for editors:
 
-`add_filter( 'agent_ready_required_capability', function () { return 'edit_pages'; } );`
+`add_filter( 'crawlbridge_required_capability', function () { return 'edit_pages'; } );`
 
 = I enabled IndexNow but I'm not seeing pings to Bing or Yandex. =
 
@@ -111,12 +111,12 @@ Check three things: (1) the IndexNow API Key field is filled in, (2) you're publ
 
 Yes. Use the relevant filter:
 
-* `agent_ready_skill_definitions` — register custom Agent Skills.
-* `agent_ready_json_ld_graph` — add custom Schema.org entries (Product, Recipe, Event, etc.).
-* `agent_ready_llms_txt_content` — append sections to or replace the llms.txt body.
-* `agent_ready_openapi_spec` — add `securitySchemes`, custom tags, additional servers.
-* `agent_ready_api_catalog_linkset` — add anchors or rels (e.g. for a GraphQL endpoint).
-* `agent_ready_mcp_server_card` — override transport / capabilities for a real MCP implementation.
+* `crawlbridge_skill_definitions` — register custom Agent Skills.
+* `crawlbridge_json_ld_graph` — add custom Schema.org entries (Product, Recipe, Event, etc.).
+* `crawlbridge_llms_txt_content` — append sections to or replace the llms.txt body.
+* `crawlbridge_openapi_spec` — add `securitySchemes`, custom tags, additional servers.
+* `crawlbridge_api_catalog_linkset` — add anchors or rels (e.g. for a GraphQL endpoint).
+* `crawlbridge_mcp_server_card` — override transport / capabilities for a real MCP implementation.
 
 The Help tab's "For Developers" section on the settings page lists every hook.
 
@@ -130,7 +130,7 @@ Minimal. The OpenAPI document is cached for a day in a transient and only regene
 
 = How do I see if AI agents are actually using my site? =
 
-The plugin doesn't include a built-in access log. To verify activity, check your server access log for User-Agents like `GPTBot`, `ClaudeBot`, `OAI-SearchBot`, `Google-Extended`, `PerplexityBot`, `CCBot`, `Bytespider`, etc. hitting any of the agent-ready endpoints.
+The plugin doesn't include a built-in access log. To verify activity, check your server access log for User-Agents like `GPTBot`, `ClaudeBot`, `OAI-SearchBot`, `Google-Extended`, `PerplexityBot`, `CCBot`, `Bytespider`, etc. hitting any of the crawlbridge endpoints.
 
 = Can I disable a feature without deactivating the plugin? =
 
@@ -155,7 +155,7 @@ Yes. Every feature is an independent toggle. Uncheck what you don't want and Sav
 * Inline Read More navigation, Testing section with View output and validator links (Google Rich Results, Swagger Editor).
 * Built-in Help tabs (Overview, Features, For Developers, Troubleshooting) with reference sidebar.
 * Reset to Defaults button.
-* Activation notice + plugins-row Settings link.
+* Plugins-row Settings link.
 * Multisite-aware path matching for every endpoint.
 * Transient caching: 1 day for OpenAPI, 1 hour for llms.txt, with smart invalidation.
 * Nine filter hooks for extending or overriding plugin behavior.
@@ -166,9 +166,30 @@ Yes. Every feature is an independent toggle. Uncheck what you don't want and Sav
 = 1.0.0 =
 Initial release.
 
+== External services ==
+
+This plugin connects to one external service, and only when the corresponding feature is explicitly enabled by the site administrator.
+
+= IndexNow (api.indexnow.org) =
+
+What it is and what it's used for: IndexNow is an open protocol (originally from Microsoft Bing and Yandex) that lets sites notify search engines the moment a URL is published or updated, so search engines can re-crawl within minutes instead of days.
+
+When data is sent: only when the **IndexNow** feature toggle is turned on AND an IndexNow API Key is configured on the settings page. In that case, every time a post of a public post type transitions to the `publish` status, the plugin fires a single non-blocking HTTPS POST to `https://api.indexnow.org/indexnow`.
+
+What data is sent: the request body is a JSON document containing exactly three fields — your site's host (e.g. `example.com`), your IndexNow API key (which you generated yourself at Bing Webmaster Tools), and the permalink URL of the post that was just published. No visitor information, IP addresses, user-agents, or post content is sent.
+
+If the IndexNow feature toggle is off (the default), the plugin makes no outbound network requests of any kind.
+
+This service is provided by Microsoft (Bing) and the IndexNow project. Their terms and privacy policies apply:
+
+* IndexNow protocol documentation: https://www.indexnow.org/documentation
+* IndexNow FAQ and terms: https://www.indexnow.org/faq
+* Microsoft Bing Webmaster Tools terms of use: https://www.bing.com/webmasters/help/microsoft-bing-webmaster-terms-of-use-72df21d2
+* Microsoft Privacy Statement: https://privacy.microsoft.com/privacystatement
+
 == Privacy ==
 
-Agent-Ready stores data **only on your own server** — there is no telemetry, no analytics, and no third-party logging. Specifically:
+Crawlbridge stores data **only on your own server** — there is no telemetry, no analytics, and no third-party logging. Specifically:
 
 = Local data =
 

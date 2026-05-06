@@ -4,7 +4,7 @@
 # WordPress.org. Keep this file in sync with what's strictly dev-tooling.
 #
 # Run from the plugin root:
-#   wp dist-archive . ./agent-ready.zip
+#   wp dist-archive . ./crawlbridge.zip
 # to verify the resulting zip contains only runtime files.
 
 # Source control
