@@ -147,7 +147,7 @@ function help_tab_troubleshooting(): string {
 		),
 		array(
 			__( 'Multisite subsite paths.', 'aj-agent-crawl-optimizer' ),
-			__( 'Every endpoint also resolves at /{subsite}/ paths automatically (e.g. /travelwithpurpose/llms.txt). Each subsite has its own settings.', 'aj-agent-crawl-optimizer' ),
+			__( 'Every endpoint also resolves at /{subsite}/ paths automatically (e.g. /blog/llms.txt). Each subsite has its own settings.', 'aj-agent-crawl-optimizer' ),
 		),
 		array(
 			__( 'Markdown Negotiation breaks on agent requests.', 'aj-agent-crawl-optimizer' ),

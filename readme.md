@@ -95,7 +95,7 @@ No. Browsers send `Accept: text/html` and get the normal HTML response. The `.we
 
 = My site is multisite. Does it work? =
 
-Yes. Every endpoint resolves at both the root and per-subsite paths automatically — `/llms.txt`, `/travelwithpurpose/llms.txt`, `/.well-known/api-catalog`, `/travelwithpurpose/.well-known/api-catalog`, etc. Each subsite has its own settings.
+Yes. Every endpoint resolves at both the root and per-subsite paths automatically — `/llms.txt`, `/blog/llms.txt`, `/.well-known/api-catalog`, `/blog/.well-known/api-catalog`, etc. Each subsite has its own settings.
 
 = How do I delegate plugin access to a non-admin role? =
 

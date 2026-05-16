@@ -251,7 +251,7 @@ msgid "Multisite subsite paths."
 msgstr ""
 
 #: includes/admin/help-tabs.php:150
-msgid "Every endpoint also resolves at /{subsite}/ paths automatically (e.g. /travelwithpurpose/llms.txt). Each subsite has its own settings."
+msgid "Every endpoint also resolves at /{subsite}/ paths automatically (e.g. /blog/llms.txt). Each subsite has its own settings."
 msgstr ""
 
 #: includes/admin/help-tabs.php:153
