@@ -17,6 +17,9 @@
 # uploaded to /assets in SVN — never shipped to users in the zip).
 /.wordpress-org
 
+# GitHub-only readme — WordPress.org reads readme.txt, not readme.md.
+/readme.md
+
 # Composer (dev dependencies for PHPCS)
 /vendor
 /composer.json
